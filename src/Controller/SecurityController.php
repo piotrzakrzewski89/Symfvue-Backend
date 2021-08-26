@@ -20,7 +20,7 @@ class SecurityController extends AbstractController
     {
         return $this->json(
             [
-                'currDate' => new DateTime(),
+                //'currDate' => new DateTime(),
                 'email' => $this->getUser() ? $this->getUser()->getEmail() : null,
                 'userId' => $this->getUser() ? $this->getUser()->getId() : null
             ]

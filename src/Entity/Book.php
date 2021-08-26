@@ -5,14 +5,19 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
  */
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: ['get','post'],
+    itemOperations: ['get','post','delete'],
+)]
 class Book
 {
     /**
+     * @Groups({"read"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -20,29 +25,41 @@ class Book
     private $id;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=255)
      */
     private $ISBN;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="string", length=255)
      */
     private $title;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="books")
      */
     private $user;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="text")
      */
     private $description;
 
     /**
+     * @Groups({"read", "write"})
      * @ORM\Column(type="datetime")
      */
     private $publicationDate;
+
+    /**
+     * Returns user object
+     * 
+     * @Groups({"read"})
+     */
+    private $userObject  = [];
 
     public function getId(): ?int
     {
@@ -105,6 +122,18 @@ class Book
     public function setPublicationDate(\DateTimeInterface $publicationDate): self
     {
         $this->publicationDate = $publicationDate;
+
+        return $this;
+    }
+
+    public function getUserObject(): ?array
+    {
+        return $this->userObject;
+    }
+
+    public function setUserObject(array $userObject): self
+    {
+        $this->userObject = $userObject;
 
         return $this;
     }
