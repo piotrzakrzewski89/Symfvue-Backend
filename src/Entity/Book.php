@@ -11,8 +11,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=BookRepository::class)
  */
 #[ApiResource(
-    collectionOperations: ['get','post'],
-    itemOperations: ['get','post','delete'],
+    collectionOperations: ['get', 'post' => ['access_control' => 'is_granted("IS_AUTHENTICATED_ANONYMOUSLY")']],
+    itemOperations: [
+        'get',
+        'put',
+        'patch',
+        'delete' => ['security' => 'is_granted("ROLE_USER")']
+    ],
 )]
 class Book
 {
